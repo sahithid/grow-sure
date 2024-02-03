@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>GROW - Monthly Activity Report for {{ month }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+    <h3>Greetings, {{ name }}!</h3>
+    <br>
+    <h3 class="d-flex justify-content-center">------ Your Monthly Activity Report ------</h3>
+    <br>
+    <h4 class="d-flex justify-content-center">Total Expenditure : {{ total }}</h4>
+    <br>
+    <canvas class="my-2 w-80 h-50" id="graph" width="50" height="50"></canvas>
+    <script>
+        var ch = document.getElementById("graph").getContext("2d");
+        const myChart = new Chart(ch, {
+            type: 'pie',
+            data: {
+                labels: {{ categories }},
+        datasets: [{
+            label: "Chart",
+            data: {{ prices }},
+            borderWidth: 1,
+                }]
+            },
+        });
+    </script>
+    <div class="d-flex justify-content-center"> 
+        <h2>Your Orders</h2>
+    </div>
+    <br>
+    <div class="row justify-content-center row-cols-1 row-cols-md-1 mb-2 text-center">
+        {% for order in info %}
+        <div class="card mb-4 rounded-3 shadow-sm center" style="width: 85rem">
+            <div class="card-header py-3" style="background-color: #c4fac3">
+                <h4 class="my-0 fw-normal">
+                    <u>Order # {{ loop.index }} - Rs. {{ order.total }}</u>
+                </h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title pricing-card-title">{{ order.time }}</h5>
+                <div class="row row-cols-3 row-cols-md-3 mb-2 text-center">
+                    {% for item in order['items'] %}
+                    <div class="card mb-4 rounded-3 shadow-sm center">
+                        <div class="card-header py-3" style="background-color: #c4fac3">
+                            <h4 class="my-0 fw-normal">
+                                {{ item.name }} | {{ item.category }}
+                            </h4>
+                        </div>
+                        <div class="card-body" style="background-color: #d8f0d7">
+                            <ul class="list-unstyled mt-1 mb-1">
+                                <li>Rs. {{ item.price }}</li>
+                                <li>Quantity {{ item.amount_to_buy }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+
+</html>
